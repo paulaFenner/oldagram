@@ -1,16 +1,22 @@
 import { posts } from './data.js';
 
-let likes = 0;
-
 function populatePostContainer() {
   for (let post of posts) {
     generateHtml(post);
   }
 }
 
+document.getElementById('post-container').addEventListener('click', handleLikeClicked);
+
+function handleLikeClicked(e) {
+  if (e.target.classList.contains('like')) {
+    incrementLike(e);
+  }
+}
+
 function generateHtml(post) {
   document.getElementById('post-container').innerHTML += `
-         <div class="gap">
+         <div class="post-wrapper">
           <section class="post-header">
             <img
               class="poster-avatar"
@@ -34,21 +40,25 @@ function generateHtml(post) {
           </section>
 
           <section class="post-reactions ">
-            <p class="likes-count">${likes} likes</p>
+            <p class="likes-count" data-likes="0">${post.likes} likes</p>
             <p><span class="bold-text">${post.username}</span> ${post.comment}</p>
           </section> 
         </div>
     `;
 }
 
-populatePostContainer();
+function incrementLike(e) {
+  e.preventDefault();
 
-const likeBtnEls = document.querySelectorAll('.like');
+  const postContainer = e.target.closest('.post-wrapper');
+  const postId = postContainer.getAttribute('data-post-id');
+  const post = posts.find((post) => post.id == postId);
 
-likeBtnEls.forEach((likeBtnEl) => {
-  likeBtnEl.addEventListener('click', incrementLike);
-});
-
-function incrementLike() {
-  likes++;
+  if (post) {
+    post.likes++;
+    const likesCountEl = postContainer.querySelector('.likes-count');
+    likesCountEl.textContent = `${post.likes} likes`;
+  }
 }
+
+populatePostContainer();

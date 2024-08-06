@@ -100,7 +100,7 @@ a .icon-btn:focus {
   margin-left: 10px;
 }
 
-.gap {
+.post-wrapper {
   margin: 0;
   border-bottom: solid 20px var(--background);
 }
